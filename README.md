@@ -1,6 +1,6 @@
 # Span28 Frontend
 
-Next.js application for the Span28 Australian outdoor structure configurator. Users can search an address, view council compliance rules, configure a structure (dimensions, attachment type), see a 3D preview, validate against council limits, and create quotes with BOM and supplier info.
+Next.js application for the Span28 Australian outdoor structure configurator. Users can register and log in, use a dashboard hub, search an address, view council compliance rules, configure a structure (dimensions, attachment type), see a 3D preview, validate against council limits, and create quotes with BOM and supplier info.
 
 ## Tech stack
 
@@ -38,13 +38,22 @@ Create a `.env.local` (or `.env`) in the frontend root:
 | `npm run start` | Start production server on port 3001 |
 | `npm run lint` | Run ESLint |
 
+## Auth and dashboard
+
+- **Login** (`/login`) and **Register** (`/register`) use the backend `POST /api/auth/login` and `POST /api/auth/register`. The access token is stored in `localStorage` under `span28_token`.
+- **Dashboard** (`/dashboard`) is the post-login hub with links to Configurator, Admin, and Builder (view-only). Requires authentication.
+- The **header** shows Log in / Register when signed out, or the user menu (Dashboard, Sign out) when signed in.
+
 ## Project structure
 
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx             # Home (links to configurator & admin)
+│   ├── layout.tsx          # Root layout (AuthProvider, Header)
+│   ├── page.tsx             # Home / landing (hero, CTAs, features)
+│   ├── login/               # Login page
+│   ├── register/            # Register page
+│   ├── dashboard/           # Dashboard (post-login hub)
 │   ├── configurator/
 │   │   ├── page.tsx         # Main configurator
 │   │   └── quote/[id]/
