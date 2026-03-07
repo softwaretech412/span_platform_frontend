@@ -48,7 +48,7 @@ export function Header() {
               <Link href="/dashboard" className={pathname === "/dashboard" ? "bg-teal-50 text-teal-700 px-3 py-2 rounded-lg text-sm font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg text-sm font-medium"}>
                 Dashboard
               </Link>
-              <Link href="/admin" className={pathname === "/admin" ? "bg-teal-50 text-teal-700 px-3 py-2 rounded-lg text-sm font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg text-sm font-medium"}>
+              <Link href="/admin" className={pathname === "/admin" || pathname?.startsWith("/admin/") ? "bg-teal-50 text-teal-700 px-3 py-2 rounded-lg text-sm font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg text-sm font-medium"}>
                 Admin
               </Link>
               <Link href="/builder" className={pathname === "/builder" ? "bg-teal-50 text-teal-700 px-3 py-2 rounded-lg text-sm font-medium" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg text-sm font-medium"}>

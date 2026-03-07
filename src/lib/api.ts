@@ -34,6 +34,18 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
   return json.data ?? json;
 }
 
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string,
+    public details?: unknown
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 async function fetchWithAuth<T>(path: string, options?: RequestInit): Promise<T> {
   const token = getAuthToken();
   const headers: Record<string, string> = {
@@ -44,7 +56,8 @@ async function fetchWithAuth<T>(path: string, options?: RequestInit): Promise<T>
   const res = await fetch(`${API_URL}${path}`, { ...options, headers });
   const json = await res.json();
   if (!res.ok) {
-    throw new Error(json?.error?.message ?? "Request failed");
+    const msg = json?.error?.message ?? "Request failed";
+    throw new ApiError(msg, res.status, json?.error?.code, json?.error?.details);
   }
   return json.data ?? json;
 }
@@ -211,6 +224,62 @@ export async function getMe(): Promise<AuthUser | null> {
   }
 }
 
+export type AdminUser = {
+  id: string;
+  email: string;
+  name: string;
+  status: string;
+  createdAt: string;
+  roles: Array<{ id: string; name: string; description: string | null }>;
+};
+
+export type AdminRole = { id: string; name: string; description: string | null; isSystem?: boolean };
+
+export async function getAdminUsers(params?: { page?: number; limit?: number; search?: string }) {
+  const page = params?.page ?? 1;
+  const limit = params?.limit ?? 20;
+  const search = params?.search ?? "";
+  const q = new URLSearchParams({ page: String(page), limit: String(limit) });
+  if (search) q.set("search", search);
+  const res = await fetch(`${API_URL}/api/admin/users?${q}`, {
+    headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {},
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message ?? "Request failed");
+  const list = json.data ?? [];
+  const meta = json.meta ?? {};
+  return { success: true, data: list as AdminUser[], total: meta.total ?? list.length, page: meta.page ?? page, limit: meta.limit ?? limit };
+}
+
+export async function getAdminRoles() {
+  const data = await fetchWithAuth<AdminRole[]>("/api/admin/roles");
+  return { success: true, data: Array.isArray(data) ? data : [] };
+}
+
+export async function assignUserRole(userId: string, roleId: string) {
+  const res = await fetch(`${API_URL}/api/admin/users/${userId}/roles`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {}),
+    },
+    body: JSON.stringify({ roleId }),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message ?? "Failed to assign role");
+  return json.data ?? { roleId };
+}
+
+export async function removeUserRole(userId: string, roleId: string) {
+  const res = await fetch(`${API_URL}/api/admin/users/${userId}/roles/${roleId}`, {
+    method: "DELETE",
+    headers: getAuthToken() ? { Authorization: `Bearer ${getAuthToken()}` } : {},
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message ?? "Failed to remove role");
+  return json.data ?? {};
+}
+
 export const api = {
   getLocationRules,
   validateFull,
@@ -224,4 +293,8 @@ export const api = {
   register,
   logout,
   getMe,
+  getAdminUsers,
+  getAdminRoles,
+  assignUserRole,
+  removeUserRole,
 };
