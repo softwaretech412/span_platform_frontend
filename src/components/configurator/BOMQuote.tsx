@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { createQuote } from "@/lib/api";
 
 interface BOMQuoteProps {
@@ -19,7 +20,7 @@ interface BOMQuoteProps {
 export function BOMQuote(props: BOMQuoteProps) {
   const { validation, configuration, structureType, addressData } = props;
   const [submitting, setSubmitting] = useState(false);
-  const [quoteResult, setQuoteResult] = useState<{ quote_number: string; total: number } | null>(null);
+  const [quoteResult, setQuoteResult] = useState<{ quote_id?: string; quote_number: string; total: number } | null>(null);
 
   const handleQuote = async () => {
     if (!addressData) return;
@@ -32,7 +33,7 @@ export function BOMQuote(props: BOMQuoteProps) {
         customer: { name: "Customer", email: "customer@example.com", phone: "" },
         installation: { address: addressData.fullAddress, postcode: addressData.postcode },
       });
-      setQuoteResult({ quote_number: res.quote_number, total: res.total });
+      setQuoteResult({ quote_id: res.quote_id, quote_number: res.quote_number, total: res.total });
     } catch (e) {
       console.error("Quote failed:", e);
     } finally {
@@ -88,16 +89,23 @@ export function BOMQuote(props: BOMQuoteProps) {
       <button
         onClick={handleQuote}
         disabled={submitting || !addressData}
-        className="rounded-lg bg-green-600 px-4 py-2 font-medium text-white hover:bg-green-700 disabled:opacity-50"
+        className="w-full rounded-lg bg-teal-600 px-4 py-3 font-medium text-white hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {submitting ? "Creating quote..." : "Get quote"}
+        {submitting ? "Creating quote…" : "Create quote"}
       </button>
 
-      {quoteResult ? (
-        <p className="text-green-400">
-          Quote {quoteResult.quote_number} created. Total: {"$" + quoteResult.total.toFixed(2)}
-        </p>
-      ) : null}
+      {quoteResult && (
+        <div className="rounded-lg border border-emerald-600/50 bg-emerald-900/20 p-3 text-sm text-emerald-300">
+          <p className="font-medium">Quote {quoteResult.quote_number} created</p>
+          <p className="mt-1">Total: {"$" + quoteResult.total.toFixed(2)}</p>
+          <Link
+            href={`/configurator/quote/${quoteResult.quote_number}`}
+            className="mt-2 inline-block font-medium text-teal-400 hover:text-teal-300 underline"
+          >
+            View quote →
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

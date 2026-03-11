@@ -79,7 +79,7 @@ export function MapView({ center, boundaryGeoJSON, className = "" }: MapViewProp
       });
     }
   }, [loaded, boundaryGeoJSON]);
-  console.log(mapboxgl.accessToken, 'mapboxgl.accessToken');
+
   if (!mapboxgl.accessToken) {
     return (
       <div className={`flex items-center justify-center bg-gray-100 ${className}`}>
