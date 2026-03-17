@@ -11,6 +11,19 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const customNavbarRoutes = [
+    "/",
+    "/configurator",
+    "/checkout",
+    "/address",
+    "/pricing",
+    "/builders",
+    "/professionals",
+    "/about",
+    "/order",
+  ];
+  const hideHeader = customNavbarRoutes.some((route) => pathname === route || pathname?.startsWith(`${route}/`));
+
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
@@ -18,6 +31,8 @@ export function Header() {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  if (hideHeader) return null;
 
   const navLink = (href: string, label: string) => (
     <Link

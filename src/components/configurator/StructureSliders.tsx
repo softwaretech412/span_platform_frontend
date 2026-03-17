@@ -1,14 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api } from "@/lib/api";
+import { api, type ValidateFullResult } from "@/lib/api";
 
-interface Limits {
-  setback_rear?: number;
-  setback_side?: number;
-  height_limit?: number;
-  site_coverage?: number;
-}
+type Limits = Record<string, number>;
 
 interface StructureSlidersProps {
   structureType: string;
@@ -18,13 +13,7 @@ interface StructureSlidersProps {
     limits: Limits;
     councilId?: string;
   };
-  onValidationChange?: (result: {
-    complies: boolean;
-    redFlags: Array<{ message: string }>;
-    structural: unknown;
-    bom?: { lineItems: unknown[]; totalCost: number };
-    suppliers?: unknown[];
-  }) => void;
+  onValidationChange?: (result: ValidateFullResult) => void;
 }
 
 const defaultConfig = {
@@ -42,13 +31,7 @@ export function StructureSliders({
   onValidationChange,
 }: StructureSlidersProps) {
   const [config, setConfig] = useState(defaultConfig);
-  const [validation, setValidation] = useState<{
-    complies: boolean;
-    redFlags: Array<{ message: string }>;
-    structural: unknown;
-    bom?: { lineItems: unknown[]; totalCost: number };
-    suppliers?: unknown[];
-  } | null>(null);
+  const [validation, setValidation] = useState<ValidateFullResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const validate = useCallback(async () => {

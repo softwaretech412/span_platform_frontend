@@ -55,47 +55,82 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-slate-900">Dashboard</h1>
-        <p className="mt-1 text-slate-500">Welcome back, {user.name || user.email}. Choose where to go next.</p>
-      </div>
-
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {cards.map((card) => (
+    <div className="min-h-[calc(100vh-3.5rem)] bg-[#060C1A] text-white">
+      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-blue-400">Workspace</p>
+            <h1 className="mt-2 text-3xl font-bold text-white lg:text-4xl">Dashboard</h1>
+            <p className="mt-2 text-slate-400">Welcome back, {user.name || user.email}. Pick up where you left off.</p>
+          </div>
           <Link
-            key={card.href}
-            href={card.href}
-            className="group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+            href="/configurator"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:from-blue-600 hover:to-blue-700"
           >
-            <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-lg text-teal-600 group-hover:bg-teal-100">
-              {card.icon}
-            </span>
-            <h2 className="text-lg font-semibold text-slate-900">{card.title}</h2>
-            <p className="mt-2 flex-1 text-sm text-slate-500">{card.description}</p>
-            <span className="mt-4 inline-flex items-center text-sm font-medium text-teal-600 group-hover:text-teal-700">
-              {card.cta}
-              <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </span>
+            Start new design
           </Link>
-        ))}
-      </div>
+        </div>
 
-      <div className="mt-10 rounded-xl border border-slate-200 bg-slate-50/50 p-6">
-        <h2 className="text-sm font-medium text-slate-700">Quick links</h2>
-        <ul className="mt-3 flex flex-wrap gap-4">
-          <li>
-            <Link href="/configurator" className="text-sm text-teal-600 hover:underline">Configurator</Link>
-          </li>
-          <li>
-            <Link href="/admin" className="text-sm text-teal-600 hover:underline">Admin dashboard</Link>
-          </li>
-          <li>
-            <Link href="/builder" className="text-sm text-teal-600 hover:underline">Builder (view-only)</Link>
-          </li>
-        </ul>
+        <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Account", value: "Active" },
+            { label: "Modules", value: "Configurator / Admin / Builder" },
+            { label: "Quick access", value: "3 areas ready" },
+            { label: "Session", value: "Authenticated" },
+          ].map((item) => (
+            <div key={item.label} className="rounded-xl border border-white/10 bg-[#0F172A] p-4">
+              <p className="text-xs uppercase tracking-wider text-slate-500">{item.label}</p>
+              <p className="mt-2 text-sm font-semibold text-white">{item.value}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="group flex flex-col rounded-2xl border border-white/10 bg-[#0F172A] p-6 transition-all hover:border-blue-500/40 hover:bg-[#111b35]"
+            >
+              <span className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500/10 text-lg text-blue-400">
+                {card.icon}
+              </span>
+              <h2 className="text-lg font-semibold text-white">{card.title}</h2>
+              <p className="mt-2 flex-1 text-sm text-slate-400">{card.description}</p>
+              <span className="mt-4 inline-flex items-center text-sm font-medium text-blue-400 group-hover:text-blue-300">
+                {card.cta}
+                <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <div className="rounded-xl border border-white/10 bg-[#0F172A] p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Quick links</h2>
+            <ul className="mt-3 flex flex-wrap gap-4">
+              <li>
+                <Link href="/configurator" className="text-sm text-blue-400 hover:underline">Configurator</Link>
+              </li>
+              <li>
+                <Link href="/admin" className="text-sm text-blue-400 hover:underline">Admin dashboard</Link>
+              </li>
+              <li>
+                <Link href="/builder" className="text-sm text-blue-400 hover:underline">Builder view</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="rounded-xl border border-white/10 bg-[#0F172A] p-6">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Next steps</h2>
+            <ul className="mt-3 space-y-2 text-sm text-slate-300">
+              <li>• Search address and run compliance checks.</li>
+              <li>• Create a quote from BOM results.</li>
+              <li>• Review quotes in admin or builder panel.</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ interface ValidationBadgeProps {
   validation: {
     complies: boolean;
     redFlags: Array<{ message: string }>;
-    structural: { labels?: { width_m?: number; depth_m?: number; area_sqm?: number } };
+    structural: Record<string, unknown> | null;
     bom: unknown;
     suppliers: unknown[];
   } | null;
@@ -20,7 +20,9 @@ export function ValidationBadge({ validation }: ValidationBadgeProps) {
   }
 
   if (validation.complies) {
-    const labels = validation.structural?.labels;
+    const labels = (validation.structural?.labels as
+      | { width_m?: number; depth_m?: number; area_sqm?: number }
+      | undefined);
     return (
       <div className="rounded-xl border border-emerald-600/50 bg-emerald-900/20 p-4">
         <p className="font-semibold text-emerald-400">Fully compliant</p>

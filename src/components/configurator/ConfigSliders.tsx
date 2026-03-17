@@ -1,7 +1,5 @@
 "use client";
 
-import type { LocationData } from "@/app/configurator/page";
-
 interface ConfigSlidersProps {
   configuration: {
     width: number;

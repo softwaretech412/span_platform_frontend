@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { StructuralData } from "@/app/configurator/page";
 
 const Structure3DPreview = dynamic(
   () => import("./Structure3DPreview").then((m) => m.Structure3DPreview),
@@ -16,7 +15,7 @@ const Structure3DPreview = dynamic(
 );
 
 interface Structure3DProps {
-  structural: StructuralData | null;
+  structural: Record<string, unknown> | null;
   configuration: {
     width: number;
     depth: number;
