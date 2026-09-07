@@ -1,3 +1,4 @@
+0xecA92544e3dD88f776E67316A37b3721bb8dc5ec
 # 3D configurator Frontend
 
 Next.js application for the Span28 Australian outdoor structure configurator. Users can register and log in, use a dashboard hub, search an address, view council compliance rules, configure a structure (dimensions, attachment type), see a 3D preview, validate against council limits, and create quotes with BOM and supplier info.
